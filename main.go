@@ -28,6 +28,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	api.Register(s.Router(), app)
+	api.Register(s.Router("/v1"), app)
 	s.Start()
 }

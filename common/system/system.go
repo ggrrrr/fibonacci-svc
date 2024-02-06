@@ -27,8 +27,8 @@ func NewSystem() *System {
 	return &s
 }
 
-func (s *System) Router() *mux.Router {
-	r := s.mux.PathPrefix("/v1").Subrouter()
+func (s *System) Router(prefix string) *mux.Router {
+	r := s.mux.PathPrefix(prefix).Subrouter()
 	return r
 }
 
