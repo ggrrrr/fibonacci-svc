@@ -15,6 +15,7 @@ import (
 	"github.com/ggrrrr/fibonacci-svc/internal/app"
 	"github.com/ggrrrr/fibonacci-svc/internal/fi"
 	"github.com/ggrrrr/fibonacci-svc/internal/repo"
+	"github.com/ggrrrr/fibonacci-svc/internal/repo/ramrepo"
 	"github.com/ggrrrr/fibonacci-svc/internal/repo/redisrepo"
 )
 
@@ -89,7 +90,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestApp(t *testing.T) {
-	memRepo := repo.NewMemRepo()
+	memRepo := ramrepo.NewMemRepo()
 
 	testApp, err := app.New(memRepo)
 	require.NoError(t, err)
@@ -127,7 +128,7 @@ func TestApp(t *testing.T) {
 }
 
 func setupMem() (*app.App, error) {
-	return app.New(repo.NewMemRepo())
+	return app.New(ramrepo.NewMemRepo())
 }
 
 func setupRedis() (*app.App, error) {

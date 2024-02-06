@@ -21,7 +21,7 @@ tag_svc:
 	
 docker_clean:
 	docker-compose kill
-	docker rm $(docker ps -a -q)
+	docker rm $(docker ps -aq)
 
 docker_prune:
 	docker image prune -a -f

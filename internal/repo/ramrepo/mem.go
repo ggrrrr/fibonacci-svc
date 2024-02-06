@@ -1,9 +1,10 @@
-package repo
+package ramrepo
 
 import (
 	"sync"
 
 	"github.com/ggrrrr/fibonacci-svc/internal/fi"
+	"github.com/ggrrrr/fibonacci-svc/internal/repo"
 )
 
 type (
@@ -13,7 +14,7 @@ type (
 	}
 )
 
-var _ (Repo) = (*memRepo)(nil)
+var _ (repo.Repo) = (*memRepo)(nil)
 
 func NewMemRepo() *memRepo {
 	return &memRepo{
