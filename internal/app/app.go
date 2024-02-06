@@ -16,6 +16,7 @@ type (
 	}
 )
 
+// Create App instance and initializes the repository if needed
 func New(r repo.Repo) (*App, error) {
 	current, err := r.Get()
 	if err != nil {
@@ -34,6 +35,7 @@ func New(r repo.Repo) (*App, error) {
 	}, nil
 }
 
+// Fetches/Calculates/Stores next Fi value
 func (a *App) Next() (fi.Number, error) {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
@@ -46,6 +48,7 @@ func (a *App) Next() (fi.Number, error) {
 	return next.Current, nil
 }
 
+// Fetches/Calculates/Stores Previous Fi value
 func (a *App) Previous() (fi.Number, error) {
 	a.mutex.Lock()
 	defer a.mutex.Unlock()
@@ -58,6 +61,7 @@ func (a *App) Previous() (fi.Number, error) {
 	return out.Current, nil
 }
 
+// Fetches the current/last Fi value
 func (a *App) Current() fi.Number {
 	a.mutex.RLock()
 	defer a.mutex.RUnlock()

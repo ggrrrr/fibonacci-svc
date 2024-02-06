@@ -86,9 +86,9 @@ Requirements:
    * `/internal` -> Business logic and packages related only to this service, this folder is protected by the GoLang package management and can not be imported in external projects.
      * `/fi` -> Methods and data models only related to the definition of `Fibonacci sequence`
      * `/api` -> Http handlers
-     * `/app` -> Application layer -> all other business logic, like in RAM storage
+     * `/app` -> Application layer -> all other business logic, like in storage operations, initialization.
      * `/repo` -> all interfaces related to storing and fetch data from external repository/storage, which are needed for the App layer.
-       * `/repo/ramrepo` -> implementation for in memory
+       * `/repo/ramrepo` -> implementation for in memory, added only for some testing and POC.
        * `/repo/pgrepo` -> implementation for PostgreSQL
        * `/repo/redisrepo` -> implementation for Redis
    * `/sql` -> files which are needed to initialize Postgres databases for automation testing and/or local running

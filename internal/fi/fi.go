@@ -8,6 +8,7 @@ type (
 	}
 )
 
+// Calculates next Fi value
 func Next(fi Fi) Fi {
 	if fi.Current == 0 {
 		return Fi{
@@ -21,6 +22,7 @@ func Next(fi Fi) Fi {
 	}
 }
 
+// Calculates ​previous Fi value
 func Previous(fi Fi) Fi {
 	if fi.Current == 0 {
 		return Fi{
