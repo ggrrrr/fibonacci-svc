@@ -3,9 +3,8 @@ package api
 //go:generate mockgen -source=$GOFILE -destination=app_mock.go -package=api
 
 import (
-	"net/http"
-
 	"github.com/ggrrrr/fibonacci-svc/internal/fi"
+	"github.com/gorilla/mux"
 )
 
 type (
@@ -16,11 +15,16 @@ type (
 	}
 )
 
-func Register(rootMux *http.ServeMux, app App) {
+func Register(rootMux *mux.Router, app App) {
 	h := handlers{
 		app: app,
 	}
+
 	rootMux.HandleFunc("/next", h.handleNext)
-	rootMux.HandleFunc("/previous", h.handlePrevious)
-	rootMux.HandleFunc("/current", h.handleCurrent)
+
+	rootMux.HandleFunc("/previous", h.handlePrevious).Methods("GET")
+	rootMux.HandleFunc("/prev", h.handlePrevious).Methods("GET")
+
+	rootMux.HandleFunc("/current", h.handleCurrent).Methods("GET")
+	rootMux.HandleFunc("/cur", h.handleCurrent).Methods("GET")
 }
