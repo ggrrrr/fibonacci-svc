@@ -44,6 +44,12 @@ func New(cfg Config) (*pgRepo, error) {
 		log.Error(err).Msg("Ping")
 		return nil, err
 	}
+	log.Info().
+		Any("Host", cfg.Host).
+		Any("Database", cfg.Database).
+		Any("Port", cfg.Port).
+		Msg("PostgresRepo")
+
 	return &pgRepo{
 		db: db,
 	}, nil

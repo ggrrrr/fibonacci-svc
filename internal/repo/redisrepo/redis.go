@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-redis/redis"
 
+	"github.com/ggrrrr/fibonacci-svc/common/log"
 	"github.com/ggrrrr/fibonacci-svc/internal/fi"
 	"github.com/ggrrrr/fibonacci-svc/internal/repo"
 )
@@ -36,6 +37,7 @@ func New(cfg Config) (*redisRepo, error) {
 	if err != nil {
 		return nil, err
 	}
+	log.Info().Any("addr", cfg.Addr).Any("db", cfg.DB).Msg("RedisRepo")
 	return &redisRepo{
 		redisKey: "last.fi",
 		client:   client,
