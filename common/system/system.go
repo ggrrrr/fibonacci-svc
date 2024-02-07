@@ -26,6 +26,10 @@ type (
 	}
 )
 
+// Main system / http listener.
+// use Router to add handlers
+// use AddCleanup to add cleanups
+// use Start to start the system
 func NewSystem(ctx context.Context, cfg Config) *System {
 	s := System{
 		addr:        cfg.Addr,
@@ -43,17 +47,22 @@ func NewSystem(ctx context.Context, cfg Config) *System {
 	return &s
 }
 
+// this functions will be executed during shutdown
+// for example connections to external databases, MessageBus systems etc...
 func (s *System) AddCleanup(f func() error) {
 	s.cleanupFunc = append(s.cleanupFunc, f)
 }
 
+// Use this router to add API handlers to the main router
 func (s *System) Router(prefix string) *mux.Router {
 	r := s.mux.PathPrefix(prefix).Subrouter()
 	return r
 }
 
-// Start the listener
-// this is blocking code.
+// Start the http listener
+// this is blocking code, and it will exit in case of:
+// root context is canceled
+// or if process receives: os.Interrupt, syscall.SIGINT, syscall.SIGTERM signal
 func (s *System) Start() error {
 	var err error
 	httpd := &http.Server{
@@ -78,6 +87,7 @@ func (s *System) Start() error {
 	return err
 }
 
+// loop in all registered cleanup functions
 func (s *System) cleanup() {
 	for _, cleanup := range s.cleanupFunc {
 		if err := cleanup(); err != nil {

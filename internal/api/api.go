@@ -21,10 +21,6 @@ func Register(rootMux *mux.Router, app App) {
 	}
 
 	rootMux.HandleFunc("/next", h.handleNext)
-
-	rootMux.HandleFunc("/previous", h.handlePrevious).Methods("GET")
-	rootMux.HandleFunc("/prev", h.handlePrevious).Methods("GET")
-
-	rootMux.HandleFunc("/current", h.handleCurrent).Methods("GET")
-	rootMux.HandleFunc("/cur", h.handleCurrent).Methods("GET")
+	rootMux.HandleFunc("/previous", h.handlePrevious)
+	rootMux.HandleFunc("/current", h.handleCurrent)
 }
