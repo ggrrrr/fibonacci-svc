@@ -26,6 +26,7 @@ func TestSetGet(t *testing.T) {
 
 	// Remove key
 	_ = testRepo.client.Del(testRepo.redisKey)
+	defer testRepo.client.Del(testRepo.redisKey)
 
 	// Verify empty key error
 	_, err = testRepo.Get()

@@ -9,6 +9,7 @@ import (
 )
 
 type (
+	// Error to show we need to initialize repo
 	NotInitializedError string
 
 	Config struct {

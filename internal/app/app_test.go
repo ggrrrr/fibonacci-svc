@@ -19,6 +19,7 @@ import (
 	"github.com/ggrrrr/fibonacci-svc/internal/repo/redisrepo"
 )
 
+// Make sure we initialize storage
 func TestNew(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
@@ -89,6 +90,7 @@ func TestNew(t *testing.T) {
 	}
 }
 
+// Testing multithreading ( make sure run go test -race ...)
 func TestApp(t *testing.T) {
 	memRepo := ramrepo.New()
 
@@ -127,25 +129,7 @@ func TestApp(t *testing.T) {
 	assert.Equal(t, fi.Number(3), testApp.Current())
 }
 
-func setupMem() (*app.App, error) {
-	return app.New(ramrepo.New())
-}
-
-func setupRedis() (*app.App, error) {
-	testRepo, err := redisrepo.New(repo.Config{
-		RepoType: redisrepo.RepoType,
-		Host:     "localhost",
-		Port:     6379,
-		Password: "",
-		Database: "0",
-	})
-	testRepo.Initialize()
-	if err != nil {
-		return nil, err
-	}
-	return app.New(testRepo)
-}
-
+// POC check speed to RAM
 func TestMem(t *testing.T) {
 	testApp, err := setupMem()
 	require.NoError(t, err)
@@ -167,9 +151,10 @@ func TestMem(t *testing.T) {
 		}
 	}()
 	wg.Wait()
-	fmt.Printf("ASDASD %v %v\n", counter, testApp.Current())
+	fmt.Printf("counter %v %v\n", counter, testApp.Current())
 }
 
+// POC check speed to RAM
 func TestRedis(t *testing.T) {
 	testApp, err := setupRedis()
 	require.NoError(t, err)
@@ -191,8 +176,10 @@ func TestRedis(t *testing.T) {
 		}
 	}()
 	wg.Wait()
+	fmt.Printf("counter %v %v\n", counter, testApp.Current())
 }
 
+// POC check speed
 func BenchmarkRedis(b *testing.B) {
 	testApp, err := setupRedis()
 	require.NoError(b, err)
@@ -200,4 +187,23 @@ func BenchmarkRedis(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		testApp.Next()
 	}
+}
+
+func setupMem() (*app.App, error) {
+	return app.New(ramrepo.New())
+}
+
+func setupRedis() (*app.App, error) {
+	testRepo, err := redisrepo.New(repo.Config{
+		RepoType: redisrepo.RepoType,
+		Host:     "localhost",
+		Port:     6379,
+		Password: "",
+		Database: "0",
+	})
+	testRepo.Initialize()
+	if err != nil {
+		return nil, err
+	}
+	return app.New(testRepo)
 }

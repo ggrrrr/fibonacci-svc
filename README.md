@@ -78,27 +78,37 @@ Requirements:
 
 2. `The API should also be able to recover and restart if it unexpectedly crashes`
 
-
-     * By storing the last calculated FI number in external storage, each time the service starts, it will read that number and use it as `Current` value.
+     * By storing the last calculated FI number in storage, each time the service starts, it will read that number and use it as `Current` value.
      
      * We can select any number of external storage solutions. Even we can support multiple, so depending on the infrastructure we can configure it to use different one.
   
     I have implemented Redis, PostgreSQL and in memory, so I can showcase the difference in performance between different storage solutions. 
 
-# Implementation and source tree organization
+# Implementation
+
+  I have tried to follow `the hexagonal architecture`, so each package can be tested independently. First the `/internal/fi` package which is as basic as possible following the ` Fibonacci sequence` definitions, then the `core` of the system I have `/internal/app` package, then we have `/internal/repo` package as repository interface only, and all implementations for Redis,Postage and in memory databases, each in its package folder.
+
+  Used external libs/frameworks
+    1. Mock/mockgen for interface isolation testing
+    2. zerolog for logging
+    3. gorilla for http router
+    4. github.com/stretchr/... for unit testing helpers
+    5. github.com/kelseyhightower/envconfig for environment variable parsing
+
+# Source tree structure
 
    * `/common` -> some common packages, this folder can be shared between other golang projects.
-     * `/log` -> logging based on `zerolog` package
-     * `/api` -> models which are shared between services, in our case only a base model for response.
-     * `/system` -> Here I have put tooling for http listener, shutdown process, http error response, these package can be shared by other projects/services.
+     * `/common/log` -> logging based on `zerolog` package
+     * `/common/api` -> models which are shared between services, in our case only a base model for response.
+     * `/common/system` -> Here I have put tooling for http listener, shutdown process, http error response
    * `/internal` -> Business logic and packages related only to this service, this folder is protected by the GoLang package management and can not be imported in external projects.
-     * `/fi` -> Methods and data models only related to the definition of `Fibonacci sequence`
-     * `/api` -> HTTP handler methods
-     * `/app` -> Application layer -> fetching initial data, keeping the in memory storage thread safe for each operation, storing data and external error handling.
-     * `/repo` -> interface/implementations related to storing and fetch data from external repository/storage, which are needed for the App layer.
-       * `/repo/ramrepo` -> implementation for in memory repository, added only for some testing and POC.
-       * `/repo/pgrepo` -> implementation for PostgreSQL.
-       * `/repo/redisrepo` -> implementation for Redis.
+     * `/internal/fi` -> Methods and data models only related to the definition of `Fibonacci sequence`
+     * `/internal/api` -> HTTP handler methods
+     * `/internal/app` -> Application layer -> fetching initial data, keeping the in memory storage thread safe for each operation, storing data and external error handling.
+     * `/internal/repo` -> interface/implementations related to storing and fetch data from external repository/storage, which are needed for the App layer.
+       * `/internal/repo/ramrepo` -> implementation for in memory repository, added only for some testing and POC.
+       * `/internal/repo/pgrepo` -> implementation for PostgreSQL.
+       * `/internal/repo/redisrepo` -> implementation for Redis.
    * `/sql` -> files which are needed to initialize Postgres databases for automation testing and/or local running.
    * `/docker-compose.yaml` -> all containers needed for test and/or run the service locally or on Ci/Cd pipeline.
    * `/main.go` -> entry  point of the service.
@@ -108,11 +118,46 @@ Requirements:
 
 ## Requirements
   1. golang version > 1.21
-  2. gomock for interface mocks (unit testing)
+  2. gomock
      
     go install go.uber.org/mock/mockgen@latest
   
   3. make tool
   4. Docker and docker-compose
   5. Load test of the API `ab` [apache benchmark](https://httpd.apache.org/docs/2.4/programs/ab.html)
- 
+
+# Running testing locally
+
+1. Building and test
+
+  ```bash
+  make build_svc
+  ```
+  This command will start all containers which are needed, it will execute `go test ...`, if successful, it will start docker image build
+
+2. Starting, You can start the service as container in 3 different configurations, 
+   1. Using Postgres `docker_run_dev_pg`
+   2. Using Redis `docker_run_dev_redis`
+   3. Using in memory `docker_run_dev_ram`
+
+3. Test
+   1. Apache benchmark run `ab` testing to each of the running services
+      1. Postgre `make ab_test_pg`
+      2. Redis `make ab_test_redis`
+      3. RAM `make ab_test_ram`
+   2. by using `curl` 
+   
+      Example:
+      ```bash
+      curl "http://localhost:8093/v1/next"
+      {"payload":3,"code":200}
+      curl "http://localhost:8093/v1/current"
+      {"payload":3,"code":200}
+      curl "http://localhost:8093/v1/previous"
+      {"payload":2,"code":200}
+      curl "http://localhost:8093/v1/previous"
+      {"payload":1,"code":200}
+      ```
+
+Thank you!
+:coffee: :bike: :beers: :pizza:
