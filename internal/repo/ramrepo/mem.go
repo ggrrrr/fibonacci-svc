@@ -3,6 +3,7 @@ package ramrepo
 import (
 	"sync"
 
+	"github.com/ggrrrr/fibonacci-svc/common/log"
 	"github.com/ggrrrr/fibonacci-svc/internal/fi"
 	"github.com/ggrrrr/fibonacci-svc/internal/repo"
 )
@@ -16,7 +17,8 @@ type (
 
 var _ (repo.Repo) = (*memRepo)(nil)
 
-func NewMemRepo() *memRepo {
+func New() *memRepo {
+	log.Info().Msg("MemRepo")
 	return &memRepo{
 		current: fi.Fi{
 			Previous: 0,

@@ -12,7 +12,8 @@ import (
 )
 
 func TestConn(t *testing.T) {
-	testRepo, err := New(Config{
+	testRepo, err := New(repo.Config{
+		RepoType: RepoType,
 		Host:     "localhost",
 		Port:     5432,
 		Username: "root",

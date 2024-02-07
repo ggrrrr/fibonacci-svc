@@ -2,6 +2,7 @@ package pgrepo
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -11,16 +12,9 @@ import (
 	"github.com/ggrrrr/fibonacci-svc/internal/repo"
 )
 
+const RepoType string = "pg"
+
 type (
-	Config struct {
-		Host     string
-		Port     int
-		Username string
-		Password string
-		Database string
-		SSLMode  string
-		Prefix   string
-	}
 	pgRepo struct {
 		db *sql.DB
 	}
@@ -28,7 +22,10 @@ type (
 
 var _ (repo.Repo) = (*pgRepo)(nil)
 
-func New(cfg Config) (*pgRepo, error) {
+func New(cfg repo.Config) (*pgRepo, error) {
+	if cfg.RepoType != RepoType {
+		return nil, errors.New("RepoType is not pg")
+	}
 	if cfg.SSLMode == "" {
 		cfg.SSLMode = "disable"
 	}

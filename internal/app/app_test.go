@@ -90,7 +90,7 @@ func TestNew(t *testing.T) {
 }
 
 func TestApp(t *testing.T) {
-	memRepo := ramrepo.NewMemRepo()
+	memRepo := ramrepo.New()
 
 	testApp, err := app.New(memRepo)
 	require.NoError(t, err)
@@ -128,14 +128,16 @@ func TestApp(t *testing.T) {
 }
 
 func setupMem() (*app.App, error) {
-	return app.New(ramrepo.NewMemRepo())
+	return app.New(ramrepo.New())
 }
 
 func setupRedis() (*app.App, error) {
-	testRepo, err := redisrepo.New(redisrepo.Config{
-		Addr:     "localhost:6379",
+	testRepo, err := redisrepo.New(repo.Config{
+		RepoType: redisrepo.RepoType,
+		Host:     "localhost",
+		Port:     6379,
 		Password: "",
-		DB:       0,
+		Database: "0",
 	})
 	testRepo.Initialize()
 	if err != nil {
@@ -167,6 +169,7 @@ func TestMem(t *testing.T) {
 	wg.Wait()
 	fmt.Printf("ASDASD %v %v\n", counter, testApp.Current())
 }
+
 func TestRedis(t *testing.T) {
 	testApp, err := setupRedis()
 	require.NoError(t, err)

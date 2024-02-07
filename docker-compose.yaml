@@ -19,3 +19,38 @@ services:
       - "5432:5432"
     volumes:
       - ./sql/pg/init.sql:/docker-entrypoint-initdb.d/init.sql
+  fi_pg:
+    hostname: fi_pg
+    container_name: fi_pg
+    image: local/be/fibonacci-svc:latest
+    environment:
+      - LISTEN_ADDR=:8091
+      - REPO_TYPE=pg
+      - REPO_HOST=postgres
+      - REPO_PORT=5432
+      - REPO_USERNAME=root
+      - REPO_PASSWORD=root
+      - REPO_DATABASE=test
+    ports:
+      - "8091:8091"
+
+  fi_redis:
+    hostname: fi_redis
+    container_name: fi_redis
+    image: local/be/fibonacci-svc:latest
+    environment:
+      - LISTEN_ADDR=:8092
+      - REPO_TYPE=redis
+      - REPO_HOST=redis
+      - REPO_PORT=6379
+    ports:
+      - "8092:8092"
+
+  fi_ram:
+    hostname: fi_ram
+    container_name: fi_ram
+    image: local/be/fibonacci-svc:latest
+    environment:
+      - LISTEN_ADDR=:8093
+    ports:
+      - "8093:8093"

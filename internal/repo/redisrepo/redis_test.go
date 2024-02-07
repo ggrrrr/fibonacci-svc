@@ -14,10 +14,12 @@ import (
 func TestSetGet(t *testing.T) {
 	var err error
 
-	testRepo, err := New(Config{
-		Addr:     "localhost:6379",
+	testRepo, err := New(repo.Config{
+		RepoType: RepoType,
+		Host:     "localhost",
+		Port:     6379,
 		Password: "",
-		DB:       0,
+		Database: "0",
 	})
 	require.NoError(t, err)
 	require.NotNil(t, testRepo)

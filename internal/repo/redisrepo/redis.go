@@ -3,6 +3,8 @@ package redisrepo
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"strconv"
 
 	"github.com/go-redis/redis"
 
@@ -11,13 +13,10 @@ import (
 	"github.com/ggrrrr/fibonacci-svc/internal/repo"
 )
 
-type (
-	Config struct {
-		Addr     string
-		Password string
-		DB       int
-	}
+const RepoType string = "redis"
+const redisKey string = "last.fi"
 
+type (
 	redisRepo struct {
 		redisKey string
 		client   *redis.Client
@@ -26,20 +25,28 @@ type (
 
 var _ (repo.Repo) = (*redisRepo)(nil)
 
-func New(cfg Config) (*redisRepo, error) {
+func New(cfg repo.Config) (*redisRepo, error) {
+	if cfg.RepoType != RepoType {
+		return nil, errors.New("RepoType is not redis")
+	}
+
+	// If Database is not set we use default == 0
+	db, _ := strconv.Atoi(cfg.Database)
+	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
 	client := redis.NewClient(&redis.Options{
-		Addr:     cfg.Addr,
+		Addr:     addr,
 		Password: cfg.Password,
-		DB:       cfg.DB,
+		DB:       db,
 	})
 
 	_, err := client.Ping().Result()
 	if err != nil {
+		log.Error(err).Str("addr", addr).Int("db", db).Str("redisKey", redisKey).Msg("RedisRepo")
 		return nil, err
 	}
-	log.Info().Any("addr", cfg.Addr).Any("db", cfg.DB).Msg("RedisRepo")
+	log.Info().Str("addr", addr).Int("db", db).Str("redisKey", redisKey).Msg("RedisRepo")
 	return &redisRepo{
-		redisKey: "last.fi",
+		redisKey: redisKey,
 		client:   client,
 	}, nil
 }

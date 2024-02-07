@@ -2,30 +2,63 @@ package main
 
 import (
 	"fmt"
-	"os"
+
+	"github.com/kelseyhightower/envconfig"
 
 	"github.com/ggrrrr/fibonacci-svc/common/system"
 	"github.com/ggrrrr/fibonacci-svc/internal/api"
 	"github.com/ggrrrr/fibonacci-svc/internal/app"
+	"github.com/ggrrrr/fibonacci-svc/internal/repo"
+	"github.com/ggrrrr/fibonacci-svc/internal/repo/pgrepo"
+	"github.com/ggrrrr/fibonacci-svc/internal/repo/ramrepo"
 	"github.com/ggrrrr/fibonacci-svc/internal/repo/redisrepo"
 )
 
-func main() {
-	s := system.NewSystem()
-
-	repo, err := redisrepo.New(redisrepo.Config{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
-	if err != nil {
-		fmt.Printf("%v", err)
-		os.Exit(1)
+type (
+	SvcConfig struct {
+		System system.Config
+		Repo   repo.Config
 	}
+)
+
+func main() {
+	var cfg SvcConfig
+	err := envconfig.Process("", &cfg)
+	if err != nil {
+		fmt.Printf("config process: %v\n", err)
+		panic(1)
+	}
+
+	if cfg.System.Addr == "" {
+		fmt.Printf("config system: LISTEN_ADDR empty %v\n", err)
+		panic(1)
+	}
+
+	s := system.NewSystem(cfg.System)
+
+	var repo repo.Repo
+
+	switch cfg.Repo.RepoType {
+	case redisrepo.RepoType:
+		repo, err = redisrepo.New(cfg.Repo)
+		if err != nil {
+			fmt.Printf("redis error: %v\n", err)
+			panic(1)
+		}
+	case pgrepo.RepoType:
+		repo, err = pgrepo.New(cfg.Repo)
+		if err != nil {
+			fmt.Printf("pg error: %v\n", err)
+			panic(1)
+		}
+	default:
+		repo = ramrepo.New()
+	}
+
 	app, err := app.New(repo)
 	if err != nil {
-		fmt.Printf("%v", err)
-		os.Exit(1)
+		fmt.Printf("app error: %v\n", err)
+		panic(1)
 	}
 
 	api.Register(s.Router("/v1"), app)
