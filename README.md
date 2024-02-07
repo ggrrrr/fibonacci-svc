@@ -54,7 +54,7 @@ Requirements:
 3. Endpoints
    1. `next` -> will fetch the current internal state and calculate next value, store that value in the internal store and return the calculated number.
    2. `current` -> will fetch current internal state and will return the current number.
-   3. `previous` -> to my understanding this method will need to behave same as `next`, but in reverse -> FI(P: n-1.C - n-1.P, P: n-1.P, ).
+   3. `previous` -> to my understanding this method will need to behave same as `next`, but in reverse -> FI(P: n-1.C - n-1.P, C: n-1.P).
    
 4. Also based on the understanding that we need to have only one *Fibonacci counter*, we can have single instance service e.g. we will not be able to scale this service horizontally, in general this is not ideal, but for this case it will cover the requirements, and will allow us to have much faster ACID operations.
 
