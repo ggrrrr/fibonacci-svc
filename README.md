@@ -95,6 +95,11 @@ Requirements:
     4. github.com/stretchr/... for unit testing helpers
     5. github.com/kelseyhightower/envconfig for environment variable parsing
 
+  For storage I have selected two external solutions:
+
+  1. Postgresql is very popular and reliable Relational database.
+  2. Redis is very popular cache (In memory) storage also Key/Value very suitable for this kind of services, also it can be configured as persistent storage.
+
 # Source tree structure
 
    * `/common` -> some common packages, this folder can be shared between other golang projects.
@@ -117,6 +122,7 @@ Requirements:
 # Running/Testing
 
 ## Requirements
+
   1. golang version > 1.21
   2. gomock
      
@@ -140,11 +146,14 @@ Requirements:
    2. Using Redis `docker_run_dev_redis`
    3. Using in memory `docker_run_dev_ram`
 
-3. Test
-   1. Apache benchmark run `ab` testing to each of the running services
-      1. Postgre `make ab_test_pg`
-      2. Redis `make ab_test_redis`
-      3. RAM `make ab_test_ram`
+3. Tests
+4. 
+   1. Apache benchmark run `ab` testing to each of the running services, all tests are for `next` endpoint
+   
+      1. Postgres `make ab_test_pg` in my dev environment max throughput is around 700 op/s 
+      2. Redis `make ab_test_redis` in my dev environment max throughput is around 1400 op/s
+      3. RAM `make ab_test_ram` in my dev environment max throughput is around 3000 op/s
+   
    2. by using `curl` 
    
       Example:
