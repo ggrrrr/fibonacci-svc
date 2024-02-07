@@ -132,9 +132,9 @@ Requirements:
 
 # Running testing locally
 
-1. Building and test
-
-  `make build_svc` - This command will start all containers which are needed, it will execute `go test ...`, if successful, it will build the docker image
+1. Building and test, run the following command:
+   
+   `make build_svc` - this will start all containers which are needed, it will execute `go test ...`, if successful, it will build the docker image
 
 2. Starting, You can start the service as container in 3 different configurations, 
    1. Using Postgres `docker_run_dev_pg`
