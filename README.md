@@ -66,10 +66,10 @@ Requirements:
      
      * Also in some `database` the insert operations are faster then select.
          
-         We can save OP time by only storing the changes into external storage, as well as keep the current value in the memory of the service, so will have the following flow
+         We can reduce OP time by only storing the changes into external storage, as well as keep the current value in the memory of the service, so will have the following flow
          1. Next call
             1. READ last FI from RAM -> CPU OP with multi-threading safety(mutex)
-            2. Calc next FI -> CPU OP
+            2. Calculate next FI -> CPU OP
             3. Store FI in RAM ->CPU OP with multi-threading safety(mutex)
             4. Store FI in persistent store -> Network OP 
             5. Return val -> Network OP
