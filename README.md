@@ -88,20 +88,18 @@ Requirements:
 
   I have tried to follow `the hexagonal architecture`, so each package can be tested independently. First the `/internal/fi` package which is as basic as possible following the ` Fibonacci sequence` definitions, then the `core` of the system I have `/internal/app` package, then we have `/internal/repo` package as repository interface only, and all implementations for Redis,Postage and in memory databases, each in its package folder.
 
-  Used external libs/frameworks
+## Used external libs/frameworks
     1. Mock/mockgen for interface isolation testing
     2. zerolog for logging
     3. gorilla for http router
     4. github.com/stretchr/... for unit testing helpers
     5. github.com/kelseyhightower/envconfig for environment variable parsing
 
-  For storage I have selected two external solutions:
-
+## For storage I have selected two external solutions:
   1. Postgresql is very popular and reliable Relational database.
   2. Redis is very popular cache (In memory) storage also Key/Value very suitable for this kind of services, also it can be configured as persistent storage.
 
 # Source tree structure
-
    * `/common` -> some common packages, this folder can be shared between other golang projects.
      * `/common/log` -> logging based on `zerolog` package
      * `/common/api` -> models which are shared between services, in our case only a base model for response.
@@ -123,12 +121,12 @@ Requirements:
 
 ## Requirements
 
-  1. golang version > 1.21
+  1. golang version >= 1.21
   2. gomock
      
     go install go.uber.org/mock/mockgen@latest
   
-  3. make tool
+  3. Gnu make tool v >= 3.81
   4. Docker and docker-compose
   5. Load test of the API `ab` [apache benchmark](https://httpd.apache.org/docs/2.4/programs/ab.html)
 
@@ -139,15 +137,14 @@ Requirements:
   ```bash
   make build_svc
   ```
-  This command will start all containers which are needed, it will execute `go test ...`, if successful, it will start docker image build
+    This command will start all containers which are needed, it will execute `go test ...`, if successful, it will build the docker image
 
-2. Starting, You can start the service as container in 3 different configurations, 
+1. Starting, You can start the service as container in 3 different configurations, 
    1. Using Postgres `docker_run_dev_pg`
    2. Using Redis `docker_run_dev_redis`
    3. Using in memory `docker_run_dev_ram`
 
-3. Tests
-4. 
+2. Tests
    1. Apache benchmark run `ab` testing to each of the running services, all tests are for `next` endpoint
    
       1. Postgres `make ab_test_pg` in my dev environment max throughput is around 700 op/s 
