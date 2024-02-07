@@ -95,3 +95,8 @@ func (r *pgRepo) Get() (fi.Fi, error) {
 func (r *pgRepo) Initialize() error {
 	return r.Set(fi.Fi{Previous: 0, Current: 0})
 }
+
+func (r *pgRepo) Cleanup() error {
+	log.Info().Msg("Cleanup")
+	return r.db.Close()
+}

@@ -39,6 +39,20 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
+// Cleanup mocks base method.
+func (m *MockRepo) Cleanup() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Cleanup")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Cleanup indicates an expected call of Cleanup.
+func (mr *MockRepoMockRecorder) Cleanup() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Cleanup", reflect.TypeOf((*MockRepo)(nil).Cleanup))
+}
+
 // Get mocks base method.
 func (m *MockRepo) Get() (fi.Fi, error) {
 	m.ctrl.T.Helper()

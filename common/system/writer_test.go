@@ -6,11 +6,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/http"
+
+	"github.com/ggrrrr/fibonacci-svc/common/api"
 )
 
 func TestSend(t *testing.T) {
 	testWriter := http.TestResponseWriter{}
-	send(&testWriter, ApiResponse{
+	send(&testWriter, api.Response{
 		Payload: "data",
 		Code:    200,
 		Message: "msg",

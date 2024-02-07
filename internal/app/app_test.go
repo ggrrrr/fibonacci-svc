@@ -191,7 +191,6 @@ func TestRedis(t *testing.T) {
 		}
 	}()
 	wg.Wait()
-	fmt.Printf("ASDASD %v %v\n", counter, testApp.Current())
 }
 
 func BenchmarkRedis(b *testing.B) {

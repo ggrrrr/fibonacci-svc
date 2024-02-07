@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kelseyhightower/envconfig"
@@ -34,7 +35,7 @@ func main() {
 		panic(1)
 	}
 
-	s := system.NewSystem(cfg.System)
+	s := system.NewSystem(context.Background(), cfg.System)
 
 	var repo repo.Repo
 
@@ -54,7 +55,7 @@ func main() {
 	default:
 		repo = ramrepo.New()
 	}
-
+	s.AddCleanup(repo.Cleanup)
 	app, err := app.New(repo)
 	if err != nil {
 		fmt.Printf("app error: %v\n", err)

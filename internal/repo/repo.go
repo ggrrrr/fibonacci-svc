@@ -25,6 +25,7 @@ type (
 		Get() (fi.Fi, error)
 		Set(fi fi.Fi) error
 		Initialize() error
+		Cleanup() error
 	}
 )
 

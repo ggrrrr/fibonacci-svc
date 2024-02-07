@@ -82,3 +82,8 @@ func (r *redisRepo) Get() (fi.Fi, error) {
 func (r *redisRepo) Initialize() error {
 	return r.Set(fi.Fi{Previous: 0, Current: 0})
 }
+
+func (r *redisRepo) Cleanup() error {
+	log.Info().Msg("Cleanup")
+	return r.client.Close()
+}

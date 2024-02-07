@@ -44,3 +44,7 @@ func (r *memRepo) Set(number fi.Fi) error {
 	r.current = number
 	return nil
 }
+
+func (*memRepo) Cleanup() error {
+	return nil
+}
