@@ -1,4 +1,5 @@
 .*
+!.deploy
 !.gitignore
 !.dockerignore
 
