@@ -134,17 +134,14 @@ Requirements:
 
 1. Building and test
 
-  ```bash
-  make build_svc
-  ```
-    This command will start all containers which are needed, it will execute `go test ...`, if successful, it will build the docker image
+  `make build_svc` - This command will start all containers which are needed, it will execute `go test ...`, if successful, it will build the docker image
 
-1. Starting, You can start the service as container in 3 different configurations, 
+2. Starting, You can start the service as container in 3 different configurations, 
    1. Using Postgres `docker_run_dev_pg`
    2. Using Redis `docker_run_dev_redis`
    3. Using in memory `docker_run_dev_ram`
 
-2. Tests
+3. Tests
    1. Apache benchmark run `ab` testing to each of the running services, all tests are for `next` endpoint
    
       1. Postgres `make ab_test_pg` in my dev environment max throughput is around 700 op/s 
